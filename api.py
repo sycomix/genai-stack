@@ -141,9 +141,7 @@ def qstream(question: Question = Depends()):
 
 @app.get("/query")
 async def ask(question: Question = Depends()):
-    output_function = llm_chain
-    if question.rag:
-        output_function = rag_chain
+    output_function = rag_chain if question.rag else llm_chain
     result = output_function(
         {"question": question.text, "chat_history": []}, callbacks=[]
     )

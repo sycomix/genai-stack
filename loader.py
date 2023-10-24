@@ -43,10 +43,7 @@ def load_so_data(tag: str = "neo4j", page: int = 1) -> None:
 
 
 def load_high_score_so_data() -> None:
-    parameters = (
-        f"?fromdate=1664150400&order=desc&sort=votes&site=stackoverflow&"
-        "filter=!.DK56VBPooplF.)bWW5iOX32Fh1lcCkw1b_Y6Zkb7YD8.ZMhrR5.FRRsR6Z1uK8*Z5wPaONvyII"
-    )
+    parameters = '?fromdate=1664150400&order=desc&sort=votes&site=stackoverflow&filter=!.DK56VBPooplF.)bWW5iOX32Fh1lcCkw1b_Y6Zkb7YD8.ZMhrR5.FRRsR6Z1uK8*Z5wPaONvyII'
     data = requests.get(so_api_base_url + parameters).json()
     insert_so_data(data)
 
@@ -97,10 +94,9 @@ def insert_so_data(data: dict) -> None:
 
 # Streamlit
 def get_tag() -> str:
-    input_text = st.text_input(
+    return st.text_input(
         "Which tag questions do you want to import?", value="neo4j"
     )
-    return input_text
 
 
 def get_pages():
