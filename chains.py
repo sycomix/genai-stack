@@ -155,13 +155,12 @@ def configure_qa_rag_chain(llm, embeddings, embeddings_store_url, username, pass
     """,
     )
 
-    kg_qa = RetrievalQAWithSourcesChain(
+    return RetrievalQAWithSourcesChain(
         combine_documents_chain=qa_chain,
         retriever=kg.as_retriever(search_kwargs={"k": 2}),
         reduce_k_below_max_tokens=False,
         max_tokens_limit=3375,
     )
-    return kg_qa
 
 
 def generate_ticket(neo4j_graph, llm_chain, input_question):
@@ -169,9 +168,10 @@ def generate_ticket(neo4j_graph, llm_chain, input_question):
     records = neo4j_graph.query(
         "MATCH (q:Question) RETURN q.title AS title, q.body AS body ORDER BY q.score DESC LIMIT 3"
     )
-    questions = []
-    for i, question in enumerate(records, start=1):
-        questions.append((question["title"], question["body"]))
+    questions = [
+        (question["title"], question["body"])
+        for i, question in enumerate(records, start=1)
+    ]
     # Ask LLM to generate new question in the same style
     questions_prompt = ""
     for i, question in enumerate(questions, start=1):
